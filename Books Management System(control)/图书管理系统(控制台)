@@ -1,0 +1,267 @@
+/**
+ * 最初版2018-2019
+ * bdqn第一年
+ * YJY
+ * 启蒙星第一本JAVA书
+ * 闲的没事做的
+ */
+
+package Book;
+
+import java.util.Scanner;
+
+class aBookCMD {
+
+	String[] name = new String[6];
+	boolean[] state = new boolean[6];
+	int[] date = new int[6];
+	int[] count = new int[6];
+	int monny = 3;// 借一天几元
+
+	public static void main(String[] args) {
+		System.out.println("欢迎使用图书管理系统");
+		new aBookCMD();
+	}
+
+	aBookCMD() {
+		setData();
+		M0();
+	}
+
+	void setData() {
+		name[0] = "罗马假日";
+		name[1] = "白雪公主";
+		name[2] = "葫芦兄弟";
+	}
+
+	void M0() {
+		System.out.println("--------------------");
+		System.out.println("1" + "新增图书");
+		System.out.println("2" + "查看图书");
+		System.out.println("3" + "删除图书");
+		System.out.println("4" + "借出图书");
+		System.out.println("5" + "归还图书");
+		System.out.println("6" + "退出");
+		System.out.println("--------------------");
+		System.out.println("请选择: ");
+
+		try {
+			Scanner sca = new Scanner(System.in);
+
+			switch (sca.nextInt()) {
+			case 1: {
+				M1();
+				break;
+			}
+			case 2: {
+				M2();
+				break;
+			}
+			case 3: {
+				M3();
+				break;
+			}
+			case 4: {
+				M4();
+				break;
+			}
+			case 5: {
+				M5();
+				break;
+			}
+			case 6: {
+				System.out.println("谢谢使用!");
+				System.exit(0);
+			}
+			default: {
+				System.out.println("谢谢使用!");
+				System.exit(0);
+			}
+			}
+		} catch (Exception e) {
+			System.out.println("请输入数字");
+		}
+	}
+
+	// 新增图书
+	void M1() {
+		System.out.println("-->" + "新增图书" + "\n");
+		Scanner sca = new Scanner(System.in);
+
+		boolean bl = true;
+		for (int i = 0; i < name.length; i++) {
+			if (name[i] == null) {
+				bl = false;
+				System.out.println("请输入图书名称: ");
+
+				// sca.skip("《");
+				name[i] = sca.next();
+				System.out.println("新增" + "《" + name[i] + "》" + "成功");
+				break;
+			}
+		}
+		if (bl) {
+			System.out.println("图书已满");
+		}
+		chose01(sca, 1); // 输入0退出，输入1继续
+	}
+
+	// 查看图书
+	void M2() {
+		System.out.println("-->" + "查看图书" + "\n");
+		Scanner sca = new Scanner(System.in);
+
+		System.out.println("序号" + "\t" + "状态" + "\t" + "名称" + "\t" + "借出日期"
+				+ "\t" + "借出次数");
+		for (int i = 0; i < name.length; i++) {
+			if (name[i] != null) {
+				if (!state[i]) {
+					System.out.println(i + 1 + "\t" + "可借阅" + "\t" + name[i]
+							+ "\t" + "\t" + count[i]);
+				} else {
+					System.out.println(i + 1 + "\t" + "已借出" + "\t" + name[i]
+							+ "\t" + date[i] + "\t" + count[i]);
+				}
+			}
+		}
+		chosse0(sca);
+	}
+
+	// 删除图书
+	void M3() {
+		System.out.println("-->" + "删除图书" + "\n");
+		Scanner sca = new Scanner(System.in);
+
+		boolean bl = false;
+		System.out.println("请输入要删除的图书名称: ");
+		String str = sca.next();
+		for (int i = 0; i < name.length; i++) {
+			if (str.equals(name[i])) {
+				bl = true;
+				if (!state[i]) {
+					name[i] = null;
+					state[i] = false;
+					date[i] = 0;
+					count[i] = 0;
+					System.out.println("图书删除成功");
+				} else {
+					System.out.println("图书已被借出,不可删除");
+				}
+				break;
+			}
+		}
+		System.out.println("未找到该图书");
+		chose01(sca, 3); // 输入0退出，输入1继续
+	}
+
+	// 借出图书
+	void M4() {
+		System.out.println("-->" + "借出图书" + "\n");
+		Scanner sca = new Scanner(System.in);
+
+		boolean bl = false;
+		System.out.println("请输入要借阅的图书名称: ");
+		String str = sca.next();
+		for (int i = 0; i < name.length; i++) {
+			if (str.equals(name[i])) {
+				bl = true;
+				if (!state[i]) {
+					System.out.println("请输入日期: ");
+					date[i] = sca.nextInt();
+					state[i] = true;
+					count[i] += 1;
+					System.out.println("借书日期: " + date[i]);
+
+					break;
+				} else {
+					System.out.println("图书已借出");
+					chose01(sca, 4);
+				}
+			}
+		}
+		System.out.println("未找到该图书");
+		chose01(sca, 4); // 输入0退出，输入1继续
+	}
+
+	// 归还图书
+	void M5() {
+		System.out.println("-->" + "归还图书" + "\n");
+		Scanner sca = new Scanner(System.in);
+
+		boolean bl = false;
+		System.out.println("请输入要归还的图书名称: ");
+		String str = sca.next();
+		for (int i = 0; i < name.length; i++) {
+			if (str.equals(name[i])) {
+				bl = true;
+				if (state[i]) {
+					System.out.println("请输入日期: ");
+					int dat = sca.nextInt();
+					state[i] = false;
+					System.out.println("归还日期: " + dat);
+					System.out.println("共计借出" + (dat - date[i]) + "天," + "需缴费"
+							+ (dat - date[i]) * monny);
+
+					break;
+				} else {
+					System.out.println("图书未借出");
+					chose01(sca, 5);
+				}
+			}
+		}
+
+		System.out.println("未找到该图书");
+		chose01(sca, 5); // 输入0退出，输入1继续
+	}
+
+	void chosse0(Scanner sca) {
+		System.out.println("输入0返回: ");
+		if (sca.nextInt() == 0) {
+			M0();
+		} else {
+			chosse0(sca);
+		}
+	}
+
+	void chose01(Scanner sca, int M) {
+		boolean bl = false;
+		while (!bl) {
+			System.out.println("输入0返回,输入1继续: ");
+
+			try {
+				switch (sca.nextInt()) {
+				case 0: {
+					M0();
+					break;
+				}
+				case 1: {
+					switch (M) {
+					case 1: {
+						bl = true;
+						M1();
+						break;
+					}
+					case 3: {
+						bl = true;
+						M3();
+						break;
+					}
+					case 4: {
+						bl = true;
+						M4();
+						break;
+					}
+					case 5: {
+						bl = true;
+						M5();
+						break;
+					}
+					}
+				}
+				}
+			} catch (Exception e) {
+			}
+
+		}
+	}
+}
